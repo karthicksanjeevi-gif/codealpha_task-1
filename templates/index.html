@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Language Translation Tool</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true">
+    <span><i></i></span>
+    <span><i></i></span>
+    <span><i></i></span>
+  </div>
+  <canvas id="dots" aria-hidden="true"></canvas>
+
+  <main>
+    <h1>Translate text</h1>
+    <p class="sub">Powered by {{ provider|capitalize }}</p>
+
+    <div class="bar">
+      <select id="source" aria-label="Translate from">
+        <option value="auto">Detect language</option>
+        {% for code, name in languages.items() %}<option value="{{ code }}">{{ name }}</option>{% endfor %}
+      </select>
+      <button id="swap" type="button" aria-label="Swap languages" title="Swap languages">&#8644;</button>
+      <select id="target" aria-label="Translate to">
+        {% for code, name in languages.items() %}<option value="{{ code }}" {{ 'selected' if code=='ta' }}>{{ name }}
+        </option>{% endfor %}
+      </select>
+    </div>
+
+    <div class="panes">
+      <section class="pane">
+        <textarea id="input" maxlength="{{ max_chars }}" placeholder="Type or paste text here"
+          aria-label="Text to translate"></textarea>
+        <div class="foot"><span id="count">0 / {{ max_chars }}</span></div>
+      </section>
+      <section class="pane out">
+        <div id="output" class="result" aria-live="polite">Your translation appears here.</div>
+        <div class="foot">
+          <button id="copy" type="button" class="ghost" disabled>Copy</button>
+          <button id="speak" type="button" class="ghost" disabled>Listen</button>
+        </div>
+      </section>
+    </div>
+
+    <button id="go" type="button" class="primary">Translate</button>
+    <p id="msg" class="msg" role="status"></p>
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

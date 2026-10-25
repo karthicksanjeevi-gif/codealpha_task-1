@@ -1,0 +1,414 @@
+:root {
+    --bg: #eceff4;
+    --panel: #fff;
+    --ink: #1c2438;
+    --muted: #6b7488;
+    --line: #d3d9e4;
+    --accent: #0f6b63;
+    --accent-d: #0b524c;
+    --err: #b3261e
+}
+
+@media (prefers-color-scheme:dark) {
+    :root {
+        --bg: #141926;
+        --panel: #1d2434;
+        --ink: #e8ecf5;
+        --muted: #9099ae;
+        --line: #323b52;
+        --accent: #3fb8aa;
+        --accent-d: #5cd0c2;
+        --err: #ff8a80
+    }
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif
+}
+
+main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    position: relative
+}
+
+h1 {
+    font-size: 2rem;
+    margin: 0;
+    letter-spacing: -.01em
+}
+
+.sub {
+    margin: 4px 0 24px;
+    color: var(--muted)
+}
+
+.bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px
+}
+
+select {
+    flex: 1;
+    padding: 10px 12px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    transition: border-color .2s, box-shadow .2s
+}
+
+select:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(15, 107, 99, .15)
+}
+
+#swap {
+    width: 42px;
+    height: 42px;
+    font-size: 1.2rem;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    transition: transform .45s cubic-bezier(.3, 1.4, .5, 1), background .2s, color .2s, border-color .2s
+}
+
+#swap:hover {
+    transform: rotate(180deg);
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent)
+}
+
+.panes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px
+}
+
+.pane {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease
+}
+
+.pane:hover,
+.pane:focus-within {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 14px 30px -12px rgba(15, 107, 99, .35)
+}
+
+textarea,
+.result {
+    flex: 1;
+    padding: 16px;
+    font: inherit;
+    font-size: 1.1rem;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    resize: none;
+    outline: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere
+}
+
+.result {
+    color: var(--muted)
+}
+
+.result.has {
+    color: var(--ink)
+}
+
+.foot {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 12px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: .85rem;
+    min-height: 46px
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden
+}
+
+.ghost {
+    padding: 6px 12px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    transition: background .2s, color .2s, border-color .2s, transform .15s
+}
+
+.ghost:disabled {
+    opacity: .4;
+    cursor: default
+}
+
+.ghost:not(:disabled):hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    transform: translateY(-2px)
+}
+
+.ghost:not(:disabled):active {
+    transform: scale(.95)
+}
+
+.primary {
+    margin-top: 16px;
+    padding: 12px 28px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: 0;
+    border-radius: 8px;
+    transition: background .2s, box-shadow .25s, transform .15s ease-out
+}
+
+.primary:hover {
+    background: var(--accent-d)
+}
+
+.primary:not(:disabled):hover {
+    box-shadow: 0 10px 24px -8px rgba(15, 107, 99, .6)
+}
+
+.primary:not(:disabled):active {
+    transform: scale(.97)
+}
+
+.primary:disabled {
+    opacity: .6;
+    cursor: wait
+}
+
+.msg {
+    min-height: 1.5em;
+    margin: 12px 0 0;
+    color: var(--err)
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px
+}
+
+@media (max-width:640px) {
+    .panes {
+        grid-template-columns: 1fr
+    }
+}
+
+/* ---------- Background blobs (mouse parallax) ---------- */
+.bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none
+}
+
+.bg span {
+    position: absolute;
+    width: 460px;
+    height: 460px;
+    will-change: transform
+}
+
+.bg i {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .38;
+    animation: float 14s ease-in-out infinite alternate
+}
+
+.bg span:nth-child(1) {
+    left: -8%;
+    top: -12%
+}
+
+.bg span:nth-child(1) i {
+    background: var(--accent)
+}
+
+.bg span:nth-child(2) {
+    right: -8%;
+    bottom: -14%;
+    width: 520px;
+    height: 520px
+}
+
+.bg span:nth-child(2) i {
+    background: #6b7bd6;
+    animation-duration: 18s;
+    animation-delay: -6s
+}
+
+.bg span:nth-child(3) {
+    left: 42%;
+    top: 30%;
+    width: 340px;
+    height: 340px
+}
+
+.bg span:nth-child(3) i {
+    background: #e0a458;
+    opacity: .25;
+    animation-duration: 22s;
+    animation-delay: -10s
+}
+
+@keyframes float {
+    to {
+        transform: translate(70px, 50px) scale(1.15)
+    }
+}
+
+/* ---------- Dot grid (drawn by JS on a canvas) ---------- */
+#dots {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none
+}
+
+/* ---------- Page-load entrance (plays once) ---------- */
+h1,
+.sub,
+.bar,
+.pane,
+.primary {
+    animation: rise .7s cubic-bezier(.2, .8, .2, 1) backwards
+}
+
+.sub {
+    animation-delay: .08s
+}
+
+.bar {
+    animation-delay: .16s
+}
+
+.pane:nth-child(1) {
+    animation-delay: .26s
+}
+
+.pane:nth-child(2) {
+    animation-delay: .36s
+}
+
+.primary {
+    animation-delay: .48s
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(22px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+/* ---------- Loading spinner inside the Translate button ---------- */
+.primary:disabled::after {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 10px;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    vertical-align: -2px
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+/* ---------- Translation result fade-in ---------- */
+.result.pop {
+    animation: pop .5s cubic-bezier(.2, .8, .2, 1)
+}
+
+@keyframes pop {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(4px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+        filter: none
+    }
+}
+
+/* ---------- Click ripple ---------- */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .45);
+    transform: scale(0);
+    animation: ripple .6s ease-out forwards;
+    pointer-events: none
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0
+    }
+}
+
+/* ---------- Respect "reduce motion" setting ---------- */
+@media (prefers-reduced-motion:reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important
+    }
+}
